@@ -4,9 +4,9 @@ import { useState, useEffect } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Upload, FileText, BarChart3, Grid3X3, CheckCircle, Clock, Zap, TrendingUp } from "lucide-react"
-import { FileUploadArea } from "@/components/file-upload-area"
-import { SummaryTab } from "@/components/summary-tab"
-import { AnswersDataGrid } from "@/components/answers-data-grid"
+import { FileUploadArea } from "./file-upload-area"
+import { SummaryTab } from "./summary-tab"
+import { AnswersDataGrid } from "./answers-data-grid"
 import { cn } from "@/lib/utils"
 
 export function ExamDashboard() {

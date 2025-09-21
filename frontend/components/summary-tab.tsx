@@ -7,6 +7,7 @@ import { TrendingUp, TrendingDown, Clock, CheckCircle, XCircle, AlertCircle } fr
 
 interface SummaryTabProps {
   hasFiles: boolean
+  isProcessing: boolean// Replace 'any' with a proper type if you have one
 }
 
 // Mock data for demonstration

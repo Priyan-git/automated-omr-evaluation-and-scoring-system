@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils"
 
 interface AnswersDataGridProps {
   hasFiles: boolean
+  isProcessing : boolean
 }
 
 // Mock data for demonstration
