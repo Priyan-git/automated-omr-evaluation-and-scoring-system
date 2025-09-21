@@ -1,17 +1,114 @@
-🧠 OMR-Automate: AI-Powered Optical Mark Recognition and Scoring System<p align="center"><img src="https://www.google.com/search?q=https://placehold.co/800x400/1e1b4b/ffffff%3Ftext%3DOMR%2520Review%2520Dashboard%26font%3Dinter" alt="OMR Review Dashboard" style="border-radius: 12px;"/></p><p align="center"><img alt="Python" src="https://www.google.com/search?q=https://img.shields.io/badge/Python-3.10%252B-%25233776AB%3Flogo%3Dpython%26logoColor%3Dwhite%26style%3Dfor-the-badge"><img alt="FastAPI" src="https://www.google.com/search?q=https://img.shields.io/badge/FastAPI-%2523009688%3Flogo%3Dfastapi%26logoColor%3Dwhite%26style%3Dfor-the-badge"><img alt="OpenCV" src="https://www.google.com/search?q=https://img.shields.io/badge/OpenCV-%25235C3EE8%3Flogo%3Dopencv%26logoColor%3Dwhite%26style%3Dfor-the-badge"><img alt="React" src="https://www.google.com/search?q=https://img.shields.io/badge/React-%252361DAFB%3Flogo%3Dreact%26logoColor%3Dblack%26style%3Dfor-the-badge"><img alt="Next.js" src="https://www.google.com/search?q=https://img.shields.io/badge/Next.js-black%3Flogo%3Dnext.js%26logoColor%3Dwhite%26style%3Dfor-the-badge"><img alt="TypeScript" src="https://www.google.com/search?q=https://img.shields.io/badge/TypeScript-%25233178C6%3Flogo%3Dtypescript%26logoColor%3Dwhite%26style%3Dfor-the-badge"></p>🎯 Project OverviewOMR-Automate is a complete, end-to-end system designed to automate the tedious process of grading OMR (Optical Mark Recognition) sheets. The project transforms a manual, time-consuming task into a fast, accurate, and auditable digital workflow.This application takes a scanned image or photograph of a completed OMR sheet, intelligently processes it using a robust computer vision pipeline, and scores it against a provided answer key. The results are then presented in a professional, modern web interface where an evaluator can review the automated scoring and make manual corrections, ensuring 100% accuracy and maintaining a full audit trail.This project is a direct implementation of a comprehensive Product Requirements Document (PRD), focusing on modularity, accuracy, and a human-in-the-loop review process to achieve an error tolerance of less than 0.5%.✨ Key Features📸 Advanced Image Processing: Utilizes an OpenCV-powered pipeline to handle perspective correction, rotation, and lighting variations, ensuring accurate bubble detection from any image source.🤖 Intelligent Bubble Analysis: Employs robust contour detection and sorting algorithms to precisely locate and identify every bubble in the correct reading order, accommodating complex, multi-column layouts.✅ High-Accuracy Scoring: Uses localized Otsu's thresholding for each bubble to accurately determine if it's filled, minimizing errors from faint or incomplete marks.💻 Professional Review UI: A modern, decoupled frontend built with Next.js and React provides a sophisticated dashboard for evaluators to review results, filter answers, and make manual corrections.🔗 Decoupled Architecture: A high-performance FastAPI backend serves the computer vision logic, allowing any modern frontend to connect and interact with the system.🔑 Flexible Answer Key Management: Dynamically loads answer keys from complex, multi-column .xlsx files, making the system adaptable to various exam formats.🔬 Ready for Machine Learning: The system is built with a "human-in-the-loop" design, enabling the collection and labeling of bubble images to train a future ML classifier for even higher accuracy.🛠️ Technology StackThe application is built with a modern, decoupled architecture, leveraging the best tools for both the backend processing and the frontend user experience.CategoryTechnologyPurposeBackendPythonCore programming languageFastAPIHigh-performance API framework for serving the backend logicOpenCVThe core library for all computer vision and image processing tasksPandasReading and parsing the Excel answer key filesUvicornASGI server for running the FastAPI applicationFrontendNext.jsReact framework for building the user interfaceReactThe core UI libraryTypeScriptFor type safety and robust frontend developmentTailwind CSSFor styling the modern user interfaceshadcn/uiFor professional, accessible, and themeable UI components⚙️ How It Works: The Processing PipelineThe system follows a modular, multi-step pipeline to ensure accuracy and auditability at every stage.Image Upload: The user uploads an OMR sheet image and an Excel answer key via the React frontend.API Request: The frontend sends the files to the FastAPI backend.Perspective Correction (Implied): The backend prepares the image for analysis.Bubble Detection: The system uses cv2.findContours to identify all potential bubbles on the sheet.Intelligent Sorting: The detected bubbles are sorted into the correct reading order (top-to-bottom, left-to-right) to match the question sequence.Answer Analysis: Each bubble is individually analyzed using Otsu's thresholding to determine if it is filled.Scoring: The detected answers are compared against the parsed answer key to calculate the final score.JSON Response: The backend returns a detailed JSON object with the score, a breakdown of all answers, and the correct answers.UI Rendering: The React frontend receives the JSON and displays the results in the professional dashboard.🚀 Getting StartedTo run this project locally, you will need two separate terminals: one for the backend and one for the frontend.PrerequisitesPython 3.9+Node.js and npm1. Backend Setup# 1. Clone the repository
+**🧠 OMR-Automate:**
+
+
+ AI-Powered Optical Mark Recognition and Scoring System
+A complete, end-to-end system designed to automate the tedious process of grading OMR sheets. This project transforms a manual, time-consuming task into a fast, accurate, and auditable digital workflow.
+
+
+**🎯 Project Overview**
+
+
+OMR-Automate is a sophisticated application engineered to address the challenges of traditional OMR sheet grading. By leveraging a powerful computer vision pipeline, the system intelligently analyzes scanned images, scores them against a provided answer key, and presents the results in a professional web interface. This not only accelerates the evaluation process but also introduces a crucial layer of transparency and accuracy.
+Designed from a comprehensive Product Requirements Document (PRD), the architecture prioritizes modularity, precision, and a "human-in-the-loop" review process, targeting an exceptional error tolerance of less than 0.5%.
+
+
+**✨ Key Features**
+
+
+📸 Advanced Image Processing:   
+A robust OpenCV-powered pipeline automatically corrects for perspective distortion, rotation, and lighting variations, ensuring reliable analysis from any image source.
+
+🤖 Intelligent Bubble Analysis:
+ The system employs advanced contour detection and a bespoke sorting algorithm to precisely locate every bubble in the correct reading order, adeptly handling complex, multi-column layouts.
+
+✅ High-Accuracy Scoring:
+ Rather than relying on a single global threshold, the application uses localized Otsu's binarization on each bubble individually, allowing it to accurately interpret faint or partially erased marks.
+
+💻 Professional Review UI:
+ A modern, decoupled frontend built with Next.js and React provides a sophisticated and intuitive dashboard for evaluators to review, filter, and manually correct results.
+
+🔗 Decoupled Architecture:
+ A high-performance FastAPI backend serves the core computer vision logic as a web service, allowing any modern frontend to connect and interact with the system seamlessly.
+
+🔑 Flexible Answer Key Management:
+ The system dynamically loads answer keys from complex, multi-column .xlsx files, making it highly adaptable to various exam formats without code changes.
+
+🔬 Ready for Machine Learning:
+ The integrated review UI is designed for "human-in-the-loop" feedback, enabling the effortless collection and labeling of bubble images to train a future ML classifier for even greater accuracy.
+
+🛠️ Technology Stack
+The application is built with a modern, decoupled architecture, leveraging best-in-class tools for both the backend processing and the frontend user experience.
+| Category      | Technology   | Purpose                                               |
+| :------------ | :----------- | :---------------------------------------------------- |
+| **Backend** | **Python** | Core programming language                             |
+|               | **FastAPI** | High-performance API framework                        |
+|               | **OpenCV** | Computer vision and image processing                  |
+|               | **Pandas** | Reading and parsing Excel files                       |
+|               | **Uvicorn** | ASGI server for running the FastAPI application       |
+| **Frontend** | **Next.js** | React framework for the UI                            |
+|               | **React** | The core UI library                                   |
+|               | **TypeScript** | For type safety and robust frontend code              |
+|               | **Tailwind CSS** | For styling the modern user interface                 |
+|               | **shadcn/ui**| For professional, accessible, and themeable UI components |
+
+
+**Process pipline:**
+The Processing Pipeline
+The system follows a modular, multi-step pipeline to ensure accuracy and auditability at every stage:
+Upload: An evaluator uploads the OMR sheet image and an Excel answer key via the React frontend.
+API Request: The frontend securely transmits the files to the FastAPI backend.
+
+Image Rectification:
+ The backend prepares the image for analysis, correcting for any skew or distortion.
+Bubble Detection:
+ The system uses cv2.findContours to identify all potential bubbles on the sheet.
+Intelligent Sorting:
+ The detected bubbles are algorithmically sorted into the correct reading order.
+Answer Analysis:
+ Each bubble is individually analyzed to determine if it has been marked by the student.
+Scoring:
+ The system cross-references the student's answers with the parsed answer key.
+JSON Response:
+ The backend returns a detailed JSON object containing the final score and a full answer breakdown.
+UI Rendering:
+ The React frontend receives the JSON and dynamically displays the results in the dashboard for review.
+
+**🚀 Getting Started**
+
+To run this project locally, you will need two separate terminals: one for the backend and one for the frontend.
+
+
+```
+python Prerequisites
+python
+Python 3.9+
+Node.js and npm
+```
+```
+1. Backend Setup
+# Clone the repository
 git clone [your-repo-url]
 cd [your-repo-name]
 
-# 2. Install Python dependencies
+# Install Python dependencies
 pip install -r requirements.txt
 
-# 3. Run the backend server
+# Run the backend server
 python -m uvicorn backend:app --reload
-The backend API will now be running at http://127.0.0.1:8000.2. Frontend Setup# 1. Navigate to the frontend directory in a NEW terminal
+
+
+The backend API will now be running at http://127.0.0.1:8000.
+2. Frontend Setup
+# In a new terminal, navigate to the frontend directory
 cd frontend
 
-# 2. Install npm packages
+# Install npm packages
 npm install
+```
 
-# 3. Run the frontend development server
+```python
+# Run the frontend development server
 npm run dev
+
+```
+
