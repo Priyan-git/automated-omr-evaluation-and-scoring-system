@@ -2,10 +2,10 @@
 
 import type React from "react"
 
-import { useCallback, useState } from "react"
+import { useCallback, useState, useRef } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Upload, X, FileCheck, Loader2 } from "lucide-react"
+import { Upload, X, FileCheck, Loader2, Camera, CameraOff } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface FileUploadAreaProps {
@@ -29,6 +29,10 @@ export function FileUploadArea({
 }: FileUploadAreaProps) {
   const [isDragging, setIsDragging] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
+  const [isCameraOpen, setIsCameraOpen] = useState(false)
+  const [stream, setStream] = useState<MediaStream | null>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
   const handleDrop = useCallback(
     async (e: React.DragEvent<HTMLDivElement>) => {
@@ -74,6 +78,68 @@ export function FileUploadArea({
     [onFileChange],
   )
 
+  const startCamera = useCallback(async () => {
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: "environment", // Use back camera on mobile
+          width: { ideal: 1920 },
+          height: { ideal: 1080 },
+        },
+      })
+      setStream(mediaStream)
+      setIsCameraOpen(true)
+      if (videoRef.current) {
+        videoRef.current.srcObject = mediaStream
+      }
+    } catch (error) {
+      console.error("Error accessing camera:", error)
+      alert("Unable to access camera. Please check permissions.")
+    }
+  }, [])
+
+  const stopCamera = useCallback(() => {
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop())
+      setStream(null)
+    }
+    setIsCameraOpen(false)
+  }, [stream])
+
+  const capturePhoto = useCallback(async () => {
+    if (!videoRef.current || !canvasRef.current) return
+
+    const video = videoRef.current
+    const canvas = canvasRef.current
+    const context = canvas.getContext("2d")
+
+    if (!context) return
+
+    canvas.width = video.videoWidth
+    canvas.height = video.videoHeight
+
+    context.drawImage(video, 0, 0, canvas.width, canvas.height)
+
+    canvas.toBlob(
+      async (blob) => {
+        if (blob) {
+          setIsUploading(true)
+          await new Promise((resolve) => setTimeout(resolve, 800))
+
+          const file = new File([blob], `${title.toLowerCase().replace(/\s+/g, "-")}-${Date.now()}.jpg`, {
+            type: "image/jpeg",
+          })
+
+          onFileChange(file)
+          setIsUploading(false)
+          stopCamera()
+        }
+      },
+      "image/jpeg",
+      0.9,
+    )
+  }, [onFileChange, title, stopCamera])
+
   const removeFile = useCallback(() => {
     onFileChange(null)
   }, [onFileChange])
@@ -98,6 +164,27 @@ export function FileUploadArea({
             >
               <X className="w-3 h-3" />
             </Button>
+          </div>
+        ) : isCameraOpen ? (
+          <div className="space-y-3">
+            <div className="relative rounded-lg overflow-hidden bg-black">
+              <video ref={videoRef} autoPlay playsInline muted className="w-full h-48 object-cover" />
+              <canvas ref={canvasRef} className="hidden" />
+            </div>
+            <div className="flex gap-2 justify-center">
+              <Button
+                onClick={capturePhoto}
+                disabled={isUploading}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-xs"
+              >
+                {isUploading ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <Camera className="w-3 h-3 mr-1" />}
+                {isUploading ? "Processing..." : "Capture"}
+              </Button>
+              <Button onClick={stopCamera} variant="outline" className="px-4 py-2 text-xs bg-transparent">
+                <CameraOff className="w-3 h-3 mr-1" />
+                Cancel
+              </Button>
+            </div>
           </div>
         ) : (
           <div
@@ -127,17 +214,31 @@ export function FileUploadArea({
                 </p>
               </div>
               {!isUploading && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className={cn(
-                    "mt-1 bg-transparent h-6 text-xs px-2 transition-all",
-                    isDragging && "bg-blue-400/20 border-blue-400",
-                  )}
-                >
-                  <Upload className="w-2.5 h-2.5 mr-1" />
-                  {isDragging ? "Drop" : "Choose"}
-                </Button>
+                <div className="flex gap-1.5 mt-1">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className={cn(
+                      "bg-transparent h-6 text-xs px-2 transition-all",
+                      isDragging && "bg-blue-400/20 border-blue-400",
+                    )}
+                  >
+                    <Upload className="w-2.5 h-2.5 mr-1" />
+                    {isDragging ? "Drop" : "Choose"}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      startCamera()
+                    }}
+                    className="bg-transparent h-6 text-xs px-2 transition-all hover:bg-blue-400/20 hover:border-blue-400"
+                  >
+                    <Camera className="w-2.5 h-2.5 mr-1" />
+                    Camera
+                  </Button>
+                </div>
               )}
             </div>
             <input
